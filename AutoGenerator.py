@@ -1,38 +1,41 @@
-import tkinter as tk
 import random
 import os
-from PIL import Image, ImageDraw, ImageFont, ImageTk
+from PIL import Image, ImageDraw, ImageFont
+
+# Шляхи до папок з емоціями відносно розташування цього файлу
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_DIR = os.path.join(BASE_DIR, "DataBase")
+FONTS_DIR = os.path.join(BASE_DIR, "fonts")
 
 emotions_folders = {
-    "smile": r"C:\\Users\\dmytr\\PycharmProjects\\pythonProject\\Lessons\\MemeGenerator\\DataBase\\smile",
-    "angry": r"C:\\Users\\dmytr\\PycharmProjects\\pythonProject\\Lessons\\MemeGenerator\\DataBase\\angry",
-    "surprised": r"C:\\Users\\dmytr\\PycharmProjects\\pythonProject\\Lessons\\MemeGenerator\\DataBase\\surprise"
+    "smile": os.path.join(DB_DIR, "smile"),
+    "angry": os.path.join(DB_DIR, "angry"),
+    "surprised": os.path.join(DB_DIR, "surprise"),
 }
 
 texts = {
     "smile": [
-        "Коли ти прокинувся і все ще не почав день",
-        "Коли в тебе завжди є привід посміятись"
+        "When you woke up and still hadn't started the day",
+        "When you always have a reason to laugh"
     ],
     "angry": [
-        "Коли тебе не чують",
-        "Коли ти чекаєш результатів",
-        "Коли різко розбудили і треба йти в якусь школу"
+        "When you are not heared",
+        "When you are wainting for results",
+        "When you wake up abruptly, you have to go to some school"
     ],
     "surprised": [
-        "Коли дізнався, що у тебе буде день відпочинку",
-        "Коли твій код працює з першого разу",
-        "Коли вирішив вивчити нову бібліотеку повністю",
-        "Коли до дедлайну 1 день а ти нічого не робив"
+        "When you found out you were having a day off",
+        "When your code works",
+        "When you decided to explore the new library completely",
+        "When your code doesnt work"
     ]
 }
-
 
 def generate_meme(photo):
     emotion = random.choice(list(emotions_folders.keys()))
 
     folder = emotions_folders[emotion]
-    image_files = os.listdir(folder)
+    image_files = [f for f in os.listdir(folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
     image_file = random.choice(image_files)
     image_path = os.path.join(folder, image_file)
 
@@ -41,8 +44,9 @@ def generate_meme(photo):
     image = Image.open(image_path)
     draw = ImageDraw.Draw(image)
 
+    font_path = os.path.join(FONTS_DIR, "comic.ttf")
     try:
-        font = ImageFont.truetype(r"C:\Windows\Fonts\comic.ttf", size=15)
+        font = ImageFont.truetype(font_path, size=28)
     except IOError:
         font = ImageFont.load_default()
 
